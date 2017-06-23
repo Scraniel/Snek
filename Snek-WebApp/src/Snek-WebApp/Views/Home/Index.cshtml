@@ -1,3 +1,35 @@
-﻿<p>
+﻿@{
+    ViewBag.Title = "Snek@MadLabs";
+    Layout = "_GameLayout";
+}
+
+
+<script type="text/javascript">
+
+
+    function Engine() {
+
+        this.Update = function() {
+            console.log("update");
+        };
+
+        this.Draw = function() {
+            console.log("draw");
+        };
+
+        this.Execute = function () {
+            this.Update();
+            this.Draw();
+        };
+
+        this.Fps = 30;
+    };
+    
+    var myEngine = new Engine();
+    setInterval(myEngine.Execute, 1000 / myEngine.Fps);
+        
+
+</script>
+<p>
     Hello World!
 </p>
