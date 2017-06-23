@@ -6,15 +6,25 @@
 
 <script type="text/javascript">
     function Engine() {
-        this.Fps = 30;
+        var Fps = 30;
 
         this.Update = function () {
-            console.log(this.Fps);
+            console.log(Fps);
         };
 
         this.Draw = function () {
             console.log("draw");
         };
+
+        this.ChangeFPS = function(newfps)
+        {
+            Fps = newfps;
+        };
+
+        this.GetFPS = function()
+        {
+            return Fps;
+        }
     };
 
     Execute = function (engine) {
@@ -23,9 +33,7 @@
     };
 
     var myEngine = new Engine();
-    var myEngine3 = new Engine();
-    myEngine3.Fps = 15;
-    setInterval(function () {Execute(myEngine) }, 1000 / myEngine.Fps);  
+    setInterval(function () { Execute(myEngine) }, 1000 / myEngine.GetFPS());
 </script>
 <p>
     Hello World!
