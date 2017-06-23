@@ -1,13 +1,14 @@
-﻿
+﻿function Scene(SceneName) {
 
-function SceneController() {
+    this._sceneName = SceneName;
 
     this.Start = function () {
 
     }
 
     this.Update = function () {
-    };
+
+    }
 
     this.Draw = function () {
 
@@ -16,5 +17,4 @@ function SceneController() {
     this.End = function () {
 
     }
-
-};
+}

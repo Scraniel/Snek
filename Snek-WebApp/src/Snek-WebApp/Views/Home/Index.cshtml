@@ -5,7 +5,8 @@
 
 
 @section JavaScriptIncludes {
-    <script language="javascript"  type="text/javascript" src="~/SnekScripts/Scene/SceneController.js"></script>
+<script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/SceneController.js"></script>
+<script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Scene.js"></script>
 }
 
 <script type="text/javascript">
@@ -14,11 +15,11 @@
         var Fps = 30;
 
         this.Update = function () {
-            console.log(Fps);
+            console.log("Update");
         };
 
         this.Draw = function () {
-            console.log("draw");
+            console.log("Draw");
         };
 
         this.ChangeFPS = function(newfps)
@@ -36,9 +37,6 @@
         engine.Update();
         engine.Draw();
     };
-
-    var sc = new SceneController();
-    sc.Update();
 
     var myEngine = new Engine();
     setInterval(function () { Execute(myEngine) }, 1000 / myEngine.GetFPS());
