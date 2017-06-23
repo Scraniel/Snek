@@ -4,7 +4,12 @@
 }
 
 
+@section JavaScriptIncludes {
+    <script language="javascript"  type="text/javascript" src="~/SnekScripts/Scene/SceneController.js"></script>
+}
+
 <script type="text/javascript">
+
     function Engine() {
         var Fps = 30;
 
@@ -31,6 +36,9 @@
         engine.Update();
         engine.Draw();
     };
+
+    var sc = new SceneController();
+    sc.Update();
 
     var myEngine = new Engine();
     setInterval(function () { Execute(myEngine) }, 1000 / myEngine.GetFPS());
