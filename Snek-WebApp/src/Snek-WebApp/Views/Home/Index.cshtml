@@ -8,6 +8,7 @@
 
 
     function Engine() {
+        _engine = this;
 
         this.Update = function() {
             console.log("update");
@@ -18,15 +19,15 @@
         };
 
         this.Execute = function () {
-            this.Update();
-            this.Draw();
+            _engine.Update();
+            _engine.Draw();
         };
 
-        this.Fps = 30;
+        _engine.Fps = 30;
     };
     
     var myEngine = new Engine();
-    setInterval(myEngine.Execute, 1000 / myEngine.Fps);
+    setInterval(myEngine.Execute, 1000/myEngine.Fps);
         
 
 </script>
