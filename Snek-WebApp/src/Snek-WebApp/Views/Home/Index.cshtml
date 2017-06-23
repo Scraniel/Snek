@@ -5,31 +5,27 @@
 
 
 <script type="text/javascript">
-
-
     function Engine() {
-        _engine = this;
+        this.Fps = 30;
 
-        this.Update = function() {
-            console.log("update");
+        this.Update = function () {
+            console.log(this.Fps);
         };
 
-        this.Draw = function() {
+        this.Draw = function () {
             console.log("draw");
         };
-
-        this.Execute = function () {
-            _engine.Update();
-            _engine.Draw();
-        };
-
-        _engine.Fps = 30;
     };
-    
-    var myEngine = new Engine();
-    setInterval(myEngine.Execute, 1000/myEngine.Fps);
-        
 
+    Execute = function (engine) {
+        engine.Update();
+        engine.Draw();
+    };
+
+    var myEngine = new Engine();
+    var myEngine3 = new Engine();
+    myEngine3.Fps = 15;
+    setInterval(function () {Execute(myEngine) }, 1000 / myEngine.Fps);  
 </script>
 <p>
     Hello World!
