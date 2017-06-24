@@ -7,6 +7,7 @@
 @section JavaScriptIncludes {
 <script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/SceneController.js"></script>
 <script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Scene.js"></script>
+<script language="javascript" type="text/javascript" src="~/SnekScripts/Characters/Snake.js"></script>
 }
 
 <script type="text/javascript">
@@ -24,23 +25,65 @@
 
         this.ChangeFPS = function(newfps)
         {
-            Fps = newfps;
+            this.Fps = newfps;
         };
 
         this.GetFPS = function()
         {
-            return Fps;
+            return this.Fps;
         }
     };
 
-    Execute = function (engine) {
-        engine.Update();
-        engine.Draw();
+    Execute = function (scene) {
+        scene.Update();
+        scene.Draw();
     };
 
-    var myEngine = new Engine();
-    setInterval(function () { Execute(myEngine) }, 1000 / myEngine.GetFPS());
+    
+
+
+    window.onload = function()
+    {
+        var canvas = document.createElement("canvas");
+        canvas.setAttribute("width", window.innerWidth);
+        canvas.setAttribute("height", window.innerHeight);
+        canvas.setAttribute("style", "position: absolute; x:0; y:0;");
+        document.body.appendChild(canvas);
+
+        Scene = new Scene("SNEK!", canvas, new Snake( 100, 100));
+
+        document.addEventListener("keypress", function (event) {
+            var directionToGo;
+            switch (event.key) {
+                case "ArrowUp":
+                case "w":
+                    directionToGo = "up";
+                    break;
+                case "ArrowDown":
+                case "s":
+                    directionToGo = "down";
+                    break;
+                case "ArrowLeft":
+                case "a":
+                    directionToGo = "left";
+                    break;
+                case "ArrowRight":
+                case "d":
+                    directionToGo = "right";
+                    break;
+                case "q":
+                    directionToGo = "EAT!!";
+                    break;
+            }
+
+            Scene.ChangeDirection(directionToGo);
+        });
+
+        setInterval(function () { Execute(Scene) }, 25);
+        document.getElementById("demo").innerHTML = Scene.GetSceneName();
+    }
+   
 </script>
-<p>
+<p id="body">
     Hello World!
 </p>

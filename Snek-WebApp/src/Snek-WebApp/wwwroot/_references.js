@@ -4,4 +4,6 @@
 /// <reference path="lib/jquery/dist/jquery.js" />
 /// <reference path="lib/jquery-validation/dist/jquery.validate.js" />
 /// <reference path="lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js" />
+/// <reference path="snekscripts/characters/snake.js" />
 /// <reference path="snekscripts/scene/scene.js" />
+/// <reference path="SnekScripts/Scene/SceneController.js" />
