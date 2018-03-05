@@ -22,8 +22,6 @@
     var _mainLoop = function (delta)
     {
         window.requestAnimationFrame(_mainLoop);
-        //var step = delta - lastFrame;
-        //lastFrame = delta;
 
         Scene.Update();
         Scene.Draw();
@@ -69,7 +67,6 @@
         });
 
         //setInterval(Execute, 1000 / fps, scene);
-        //requestAnimationFrame(_mainLoop);
         _mainLoop();
     }
    
