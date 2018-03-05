@@ -1,27 +1,17 @@
 ﻿var SEGMENT_WIDTH = 5;
 
-function SnakeSegment(startX, startY, previous, directionX, directionY)
+function SnakeSegment(startX, startY, previous)
 {
     var _x = startX;
     var _y = startY;
 
-    // Direction is just an array of size 2, ie. x and y components of velocity:
-    // [-1, 0] -> left 1 unit
-    // [0, 2] -> up 2 units
-    // etc.
-    //
-    var _currentDirection = [directionX, directionY];
-    var _nextDirection = previous == null ? null : [directionX, directionY];
     var _previous = previous;
     var _next = null;
 
-    this.UpdatePosition = function(nextDirectionX, nextDirectionY)
+    this.UpdatePosition = function (nextPositionX, nextPositionY)
     {
-        
-        _x += _currentDirection[0] * SEGMENT_WIDTH;
-        _y += _currentDirection[1] * SEGMENT_WIDTH;
-        _currentDirection = _nextDirection;
-        _nextDirection = nextDirectionX == null ? null : [nextDirectionX, nextDirectionY];
+        _x = nextPositionX;
+        _y = nextPositionY;
     }
 
     this.SetNext = function(next)
@@ -53,80 +43,46 @@ function SnakeSegment(startX, startY, previous, directionX, directionY)
     {
         return _y;
     }
-
-    this.GetDirectionX = function()
-    {
-        return _currentDirection[0];
-    }
-    this.GetDirectionY = function()
-    {
-        return _currentDirection[1];
-    }
-
-    this.ContinueDirection = function ()
-    {
-        _nextDirection = _currentDirection;
-    }
-
-    this.HasNextDirection = function()
-    {
-        return _nextDirection != null;
-    }
-
-    this.SetNextDirection = function(nextX, nextY)
-    {
-        if (!this.isOpposite([nextX, nextY]))
-        {
-            _nextDirection = [nextX, nextY];
-        }
-       
-    }
-
-    this.isOpposite = function(nextDirection)
-    {
-        isXOpposite = _currentDirection[0] == 0 ? false : (_currentDirection[0] < 0 ? nextDirection[0] > 0 : nextDirection[0] < 0);
-        isYOpposite = _currentDirection[1] == 0 ? false : (_currentDirection[1] < 0 ? nextDirection[1] > 0 : nextDirection[1] < 0);
-
-        return isXOpposite || isYOpposite;
-    }
 }
 
 function Snake(startX, startY)
 {
-    var _head = new SnakeSegment(startX, startY, null, 1,0)
+    var _head = new SnakeSegment(startX, startY, null)
     var _tail = _head;
+
+    // Direction is just an array of size 2, ie. x and y components of velocity:
+    // [-1, 0] -> left 1 unit
+    // [0, 2] -> up 2 units
+    // etc.
+    //
+    var _direction = [1,0];
 
     this.Eat = function ()
     {
-        var newX = _tail.GetX() - _tail.GetDirectionX() * SEGMENT_WIDTH;
-        var newY = _tail.GetY() - _tail.GetDirectionY() * SEGMENT_WIDTH;
+        var newX = _tail.GetX();
+        var newY = _tail.GetY();
 
-        var newTail = new SnakeSegment(newX, newY, _tail, _tail.GetDirectionX(), _tail.GetDirectionY());
+        var newTail = new SnakeSegment(newX, newY, _tail);
         _tail.SetNext(newTail);
         _tail = newTail;
-
     }
 
     this.Move = function ()
     {
-        var currentSegment = _head;
+        var currentSegment = _tail;
+        var parent = _tail.GetPrevious();
 
-        // If no input, keep going the same direction
+        while (parent != null)
+        {
+            currentSegment.UpdatePosition(parent.GetX(), parent.GetY())
+            currentSegment = parent;
+            parent = parent.GetPrevious();
+        }
+
+        // Head updates using direction
         //
-        if (!currentSegment.HasNextDirection())
-        {
-            currentSegment.ContinueDirection();     
-        }
+        currentSegment.UpdatePosition(currentSegment.GetX() + (_direction[0] * SEGMENT_WIDTH), currentSegment.GetY() + (_direction[1] * SEGMENT_WIDTH));
 
-        var nextDirectionX = null;
-        var nextDirectionY = null;
-        while(currentSegment != null)
-        {
-            currentSegment.UpdatePosition(nextDirectionX, nextDirectionY)
-            nextDirectionX = currentSegment.GetDirectionX()
-            nextDirectionY = currentSegment.GetDirectionY();
-            currentSegment = currentSegment.GetNext();
-        }
     }
 
     this.ChangeDirection = function (direction)
@@ -150,9 +106,11 @@ function Snake(startX, startY)
                 break;
         }
 
-        _head.SetNextDirection(nextX, nextY);
+        if (!this.isOpposite([nextX, nextY])) 
+        {
+            _direction = [nextX, nextY];
+        }
     }
-
 
     // TODO: This can be optimized to be cached when movement occurs / new pieces are added.
     //
@@ -169,6 +127,14 @@ function Snake(startX, startY)
         }
 
         return segmentPositions;
+    }
+
+    this.isOpposite = function (nextDirection)
+    {
+        var isXOpposite = _direction[0] == 0 ? false : (_direction[0] < 0 ? nextDirection[0] > 0 : nextDirection[0] < 0);
+        var isYOpposite = _direction[1] == 0 ? false : (_direction[1] < 0 ? nextDirection[1] > 0 : nextDirection[1] < 0);
+
+        return isXOpposite || isYOpposite;
     }
 
 }

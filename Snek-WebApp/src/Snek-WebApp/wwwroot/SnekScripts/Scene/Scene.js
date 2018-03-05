@@ -33,8 +33,9 @@ function Scene(SceneName, Canvas, Snake) {
 
     this.ChangeDirection = function(newDirection)
     {
-        if (newDirection == "EAT!!")
+        if (newDirection == "EAT!!") {
             _snake.Eat();
+        }
         else
             _snake.ChangeDirection(newDirection)
     }
