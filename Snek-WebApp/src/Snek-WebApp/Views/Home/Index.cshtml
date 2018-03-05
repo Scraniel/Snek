@@ -4,56 +4,45 @@
 }
 
 
-@section JavaScriptIncludes {
-<script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/SceneController.js"></script>
-<script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Scene.js"></script>
-<script language="javascript" type="text/javascript" src="~/SnekScripts/Characters/Snake.js"></script>
+@section JavaScriptIncludes 
+{
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Scene.js"></script>
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Characters/Snake.js"></script>
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Utility/Util.js"></script>
 }
 
 <script type="text/javascript">
 
-    function Engine() {
-        var Fps = 30;
-
-        this.Update = function () {
-            console.log("Update");
-        };
-
-        this.Draw = function () {
-            console.log("Draw");
-        };
-
-        this.ChangeFPS = function(newfps)
-        {
-            this.Fps = newfps;
-        };
-
-        this.GetFPS = function()
-        {
-            return this.Fps;
-        }
-    };
-
-    Execute = function (scene) {
+    Execute = function (scene)
+    {
         scene.Update();
         scene.Draw();
     };
 
-    
+    var _mainLoop = function (delta)
+    {
+        window.requestAnimationFrame(_mainLoop);
+        //var step = delta - lastFrame;
+        //lastFrame = delta;
 
+        Scene.Update();
+        Scene.Draw();
+    }
 
     window.onload = function()
     {
         var canvas = document.createElement("canvas");
-        canvas.setAttribute("width", window.innerWidth);
-        canvas.setAttribute("height", window.innerHeight);
-        canvas.setAttribute("style", "position: absolute; x:0; y:0;");
+        var fps = 55;
+        canvas.setAttribute("width", 600);
+        canvas.setAttribute("height", 600);
+        canvas.setAttribute("style", "position: absolute; x:0; y:0;border:1px solid #000000;");
         document.body.appendChild(canvas);
 
-        Scene = new Scene("SNEK!", canvas, new Snake( 100, 100));
+        Scene = new Scene("SNEK!", canvas);
 
-        document.addEventListener("keypress", function (event) {
-            var directionToGo;
+        document.addEventListener("keydown", function (event) 
+        {
+            var directionToGo = null;
             switch (event.key) {
                 case "ArrowUp":
                 case "w":
@@ -79,11 +68,9 @@
             Scene.ChangeDirection(directionToGo);
         });
 
-        setInterval(function () { Execute(Scene) }, 25);
-        document.getElementById("body").innerHTML = Scene.GetSceneName();
+        //setInterval(Execute, 1000 / fps, scene);
+        //requestAnimationFrame(_mainLoop);
+        _mainLoop();
     }
    
 </script>
-<p id="body">
-    Hello World!
-</p>
