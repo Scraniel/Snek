@@ -4,32 +4,70 @@
 }
 
 
+@section JavaScriptIncludes 
+{
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Scene.js"></script>
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Characters/Snake.js"></script>
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Utility/Util.js"></script>
+}
+
 <script type="text/javascript">
 
-
-    function Engine() {
-
-        this.Update = function() {
-            console.log("update");
-        };
-
-        this.Draw = function() {
-            console.log("draw");
-        };
-
-        this.Execute = function () {
-            this.Update();
-            this.Draw();
-        };
-
-        this.Fps = 30;
+    Execute = function (scene)
+    {
+        scene.Update();
+        scene.Draw();
     };
-    
-    var myEngine = new Engine();
-    setInterval(myEngine.Execute, 1000 / myEngine.Fps);
-        
 
+    var _mainLoop = function (delta)
+    {
+        window.requestAnimationFrame(_mainLoop);
+
+        Scene.Update();
+        Scene.Draw();
+    }
+
+    window.onload = function()
+    {
+        var canvas = document.createElement("canvas");
+        var fps = 55;
+        canvas.setAttribute("width", 600);
+        canvas.setAttribute("height", 600);
+        canvas.setAttribute("style", "position: absolute; x:0; y:0;border:1px solid #000000;");
+        document.body.appendChild(canvas);
+
+        Scene = new Scene("SNEK!", canvas);
+
+        document.addEventListener("keydown", function (event) 
+        {
+            var directionToGo = null;
+            switch (event.key) {
+                case "ArrowUp":
+                case "w":
+                    directionToGo = "up";
+                    break;
+                case "ArrowDown":
+                case "s":
+                    directionToGo = "down";
+                    break;
+                case "ArrowLeft":
+                case "a":
+                    directionToGo = "left";
+                    break;
+                case "ArrowRight":
+                case "d":
+                    directionToGo = "right";
+                    break;
+                case "q":
+                    directionToGo = "EAT!!";
+                    break;
+            }
+
+            Scene.ChangeDirection(directionToGo);
+        });
+
+        //setInterval(Execute, 1000 / fps, scene);
+        _mainLoop();
+    }
+   
 </script>
-<p>
-    Hello World!
-</p>
