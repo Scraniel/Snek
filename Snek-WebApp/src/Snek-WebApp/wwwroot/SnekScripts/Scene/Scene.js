@@ -30,7 +30,7 @@
             var newY = RoundToNearest(Math.random() * _height, SEGMENT_WIDTH);
             var newFood = new Circle(newX, newY, 5);
 
-            if (Contains(_food, newFood) == -1)
+            if (Contains(_food, newFood) === -1)
             {
                 _food.push(newFood);
                 amount--;
@@ -42,7 +42,7 @@
     {
         _snake = new Snake(_centerX, _centerY);
         _food = [];
-    }
+    };
 
     this.Update = function ()
     {
@@ -63,7 +63,7 @@
         else
             _snake.Move();
 
-        var toGenerate = Math.floor((_snake.GetLength() / 5)) + 1 - _food.length;
+        var toGenerate = Math.floor(_snake.GetLength() / 5) + 1 - _food.length;
 
         if (toGenerate > 0)
         {
@@ -75,7 +75,7 @@
     {
         var toDraw = _snake.GetPositionData();
         var context = _canvas.getContext("2d");
-        context.clearRect(0, 0, _canvas.width, _canvas.height)
+        context.clearRect(0, 0, _canvas.width, _canvas.height);
 
         context.font = "50px Courier";
         context.textAlign = "center";
@@ -112,6 +112,6 @@
         if (newDirection === "EAT!!")
             _snake.Eat();
         else
-            _snake.ChangeDirection(newDirection)
+            _snake.ChangeDirection(newDirection);
     };
-};
+}

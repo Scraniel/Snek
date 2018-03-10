@@ -1,7 +1,7 @@
 ﻿function RoundToNearest(toRound, multiple)
 {
     return Math.ceil(toRound / multiple) * multiple;
-};
+}
 
 function Point(x, y)
 {
@@ -11,18 +11,18 @@ function Point(x, y)
     this.Equals = function (otherPoint)
     {
         return otherPoint.GetX() === _x && otherPoint.GetY() === _y;
-    }
+    };
 
     this.GetX = function ()
     {
         return _x;
-    }
+    };
 
     this.GetY = function ()
     {
         return _y;
-    }
-};
+    };
+}
 
 function Circle(x, y, radius)
 {
@@ -38,23 +38,23 @@ function Circle(x, y, radius)
 
         return point.GetX() >= lowerBoundX && point.GetX() <= upperBoundX
             && point.GetY() >= lowerBoundY && point.GetY() <= upperBoundY;
-    }
+    };
 
     this.Equals = function (otherCircle)
     {
         return _location.Equals(otherCircle.GetLocation()) && _radius === otherCircle.GetRadius();
-    }
+    };
 
     this.GetLocation = function ()
     {
         return _location;
-    }
+    };
 
     this.GetRadius = function ()
     {
         return _radius;
-    }
-};
+    };
+}
 
 function Contains(array, value)
 {
@@ -67,7 +67,7 @@ function Contains(array, value)
     }
     
     return -1;
-};
+}
 
 function ContainsPoint(array, point)
 {
