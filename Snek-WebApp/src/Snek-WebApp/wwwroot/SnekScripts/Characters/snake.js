@@ -116,7 +116,7 @@ function Snake(startX, startY)
 
     this.ChangeDirection = function (direction)
     {
-        var nextX = 0
+        var nextX = 0;
         var nextY = 0;
 
         switch (direction) {
