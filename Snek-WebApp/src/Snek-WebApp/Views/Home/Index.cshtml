@@ -12,6 +12,7 @@
     <script language="javascript" type="text/javascript" src="~/SnekScripts/Engine/Engine.js"></script>
     <script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Screens/GameScreen.js"></script>
     <script language="javascript" type="text/javascript" src="~/SnekScripts/Scene/Screens/StartScreen.js"></script>
+    <script language="javascript" type="text/javascript" src="~/SnekScripts/Engine/KeyboardInputHandler.js"></script>
 }
 
 <script type="text/javascript">
@@ -26,10 +27,7 @@
 
         var _fps = 60;
         var _scene = new Scene(canvas);
-        _scene.Init();
         var _engine = new Engine(_scene, _fps);
-
-        document.addEventListener("keydown", _engine.KeyboardListener);
 
         _engine.GameLoop();
     }

@@ -54,5 +54,5 @@
         };
 
         _scene.UpdateAction(directionToGo);
-    }
+    };
 }

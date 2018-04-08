@@ -36,6 +36,7 @@
         }
 
         _currentScreen = _screens[ScreenName];
+        _currentScreen.Startup();
         _currentAction = null;
     };
 
@@ -69,14 +70,13 @@
         return _centerY;
     };
 
-    this.Init = function ()
+    // 1 time Initialization
+    //
+    _screens = 
     {
-        _screens = 
-        {
-            'StartScreen': new StartScreen(_canvas, _self),
-            'GameScreen': new GameScreen(_canvas, _self)
-        };
+        'StartScreen': new StartScreen(_canvas, _self),
+        'GameScreen': new GameScreen(_canvas, _self)
+    };
 
-        _currentScreen = _screens['StartScreen'];
-    }
+    this.ChangeScreen('StartScreen');
 }
