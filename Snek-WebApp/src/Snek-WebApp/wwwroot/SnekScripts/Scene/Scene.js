@@ -1,6 +1,5 @@
 ﻿function Scene(SceneName, Canvas)
 {
-
     var _sceneName = SceneName;
     var _canvas = Canvas;
     var _width = _canvas.getAttribute("width");
@@ -8,6 +7,7 @@
     var _centerX = RoundToNearest(_width / 2, SEGMENT_WIDTH);
     var _centerY = RoundToNearest(_height / 2, SEGMENT_WIDTH);
     var _snake = new Snake(_centerX, _centerY);
+    var _newDirection = null;
 
     // I think this should be a set of points or dictionary from point -> boolean.
     // That way constant time lookup instead of iteration can be done.
@@ -50,6 +50,14 @@
         var y = _snake.GetY();
         var foodIndex = ContainsPoint(_food, new Point(x, y));
 
+        if (_newDirection != null)
+        {
+            _snake.ChangeDirection(_newDirection);
+            _newDirection = null;
+        }
+
+        // Eat if on some food
+        //
         if (foodIndex > -1)
         {
             // Another reason we should use a set / dictionary
@@ -58,11 +66,16 @@
             _snake.Eat();
         }
 
+        // Move or end
+        //
         if (x >= _width || x <= 0 || y >= _height || y <= 0 || _snake.IsDead())
             this.EndGame();
         else
             _snake.Move();
 
+
+        // Generate more food
+        //
         var toGenerate = Math.floor(_snake.GetLength() / 5) + 1 - _food.length;
 
         if (toGenerate > 0)
@@ -112,6 +125,6 @@
         if (newDirection === "EAT!!")
             _snake.Eat();
         else
-            _snake.ChangeDirection(newDirection);
+            _newDirection = newDirection;
     };
 }
