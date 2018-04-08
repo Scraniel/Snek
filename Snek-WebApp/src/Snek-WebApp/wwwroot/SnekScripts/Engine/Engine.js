@@ -21,6 +21,9 @@
         window.requestAnimationFrame(_self.GameLoop);
     };
 
+    // This might be better off in the Scene. The engine should sort of be
+    // independant of the game logic
+    //
     this.KeyboardListener = function (event) 
     {
         var directionToGo = null;
@@ -45,8 +48,11 @@
             case "q":
                 directionToGo = "EAT!!";
                 break;
+            case "Enter":
+                directionToGo = "Enter";
+                break;
         };
 
-        _scene.ChangeDirection(directionToGo);
+        _scene.UpdateAction(directionToGo);
     }
 }
