@@ -1,11 +1,14 @@
 ﻿function StartScreen(Canvas, Scene)
 {
-    var _canvas = Canvas;
-    var _scene = Scene;
-    var _drawText = true;
-    var _lastDraw = Date.now();
     var FLASH_TIME_MS = 1000;
     var START_MENU_TEXT = "PRESS ENTER";
+
+    var _canvas = Canvas;
+    var _scene = Scene;
+    var _self = this;
+    var _drawText = true;
+    var _lastDraw = Date.now();
+    var _inputHandler = {};
 
     this.Draw = function ()
     {
@@ -28,13 +31,26 @@
             _drawText ^= true;
             _lastDraw = current;
         }
-
-        // Change to 'lastPressed'
-        //
-        if (_scene.GetCurrentAction() == "Enter")
-        {
-            _drawText = false;
-            _scene.ChangeScreen("GameScreen");
-        }
     };
+
+    this.EnterGame = function ()
+    {
+        _drawText = false;
+        _scene.ChangeScreen("GameScreen");
+        _inputHandler.Disable();
+    }
+
+    this.Startup = function ()
+    {
+        _inputHandler.Enable();
+    }
+
+    // One time initialization
+    //
+    var events =
+        {
+            "Enter": this.EnterGame
+        };
+
+    _inputHandler = new KeyboardInputHandler(events, _self);
 }

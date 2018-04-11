@@ -5,6 +5,8 @@
     var _snake = new Snake(_scene.GetCenterX(), _scene.GetCenterY());
     var _newDirection = null;
     var DIRECTIONS = ["left", "right", "up", "down"];
+    var _snakeHandler = null;
+    var _self = this;
 
     // I think this should be a set of points or dictionary from point -> boolean.
     // That way constant time lookup instead of iteration can be done.
@@ -64,8 +66,6 @@
 
     this.Update = function ()
     {
-        this.ChangeDirection(_scene.GetCurrentAction());
-
         var x = _snake.GetX();
         var y = _snake.GetY();
         var foodIndex = ContainsPoint(_food, new Point(x, y));
@@ -89,7 +89,7 @@
         // Move or end
         //
         if (x >= _scene.GetWidth() || x <= 0 || y >= _scene.GetHeight() || y <= 0 || _snake.IsDead())
-            this.ResetGame();
+            _self.ResetGame();
         else
             _snake.Move();
 
@@ -100,7 +100,7 @@
 
         if (toGenerate > 0)
         {
-            this.GenerateFood(toGenerate);
+            _self.GenerateFood(toGenerate);
         }
     };
 
@@ -121,7 +121,42 @@
     {
         _snake = new Snake(_scene.GetCenterX(), _scene.GetCenterY());
         _food = [];
+        _snakeHandler.Disable();
 
         _scene.ChangeScreen("StartScreen");
+    };
+
+    // Run every time the screen is changed to
+    //
+    this.Startup = function ()
+    {
+        // We make a new snake so we have to update the object it acts on
+        //
+        _self.SetupSnakeInput();
+        _snakeHandler.Enable();
+    };
+
+    this.SetupSnakeInput = function ()
+    {
+        var events =
+            {
+                "w": function () { _self.ChangeDirection("up") },
+                "a": function () { _self.ChangeDirection("left") },
+                "s": function () { _self.ChangeDirection("down") },
+                "d": function () { _self.ChangeDirection("right") }
+            };
+
+        if (_snakeHandler === null)
+            _snakeHandler = new KeyboardInputHandler(events);
+        else
+        {
+            for (var key in events)
+            {
+                if (events.hasOwnProperty(key))
+                {
+                    _snakeHandler.UpsertKey(key, events[key]);
+                }
+            }
+        }
     };
 }
