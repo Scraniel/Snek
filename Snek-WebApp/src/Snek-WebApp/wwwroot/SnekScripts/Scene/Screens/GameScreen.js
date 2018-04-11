@@ -2,10 +2,12 @@
 {
     var _canvas = Canvas;
     var _scene = Scene;
-    var _snake = new Snake(_scene.GetCenterX(), _scene.GetCenterY());
-    var _newDirection = null;
-    var DIRECTIONS = ["left", "right", "up", "down"];
+    var _snakes = [];
     var _snakeHandler = null;
+    var _newDirections = [];
+    var DIRECTIONS = ["left", "right", "up", "down"];
+    var _twoPlayerMode = false;
+
     var _self = this;
 
     // I think this should be a set of points or dictionary from point -> boolean.
@@ -34,14 +36,21 @@
 
     this.Draw = function ()
     {
-        var toDraw = _snake.GetPositionData();
         var context = _canvas.getContext("2d");
         context.clearRect(0, 0, _canvas.width, _canvas.height);
 
+        var toDraw = [];
+        for (var snake of _snakes)
+        {
+            toDraw = toDraw.concat(snake.GetPositionData());
+        }
+
+        // TODO: Fix score for 2p
+        //
         context.font = "50px Courier";
         context.textAlign = "center";
         context.fillStyle = "#D3D3D3";
-        context.fillText(_snake.GetLength(), _scene.GetCenterX(), _scene.GetCenterY());
+        context.fillText(_snakes[0].GetLength(), _scene.GetCenterX(), _scene.GetCenterY());
 
         context.fillStyle = "#000000";
 
@@ -66,37 +75,44 @@
 
     this.Update = function ()
     {
-        var x = _snake.GetX();
-        var y = _snake.GetY();
-        var foodIndex = ContainsPoint(_food, new Point(x, y));
-
-        if (_newDirection != null && DIRECTIONS.includes(_newDirection))
+        for (var i in _snakes)
         {
-            _snake.ChangeDirection(_newDirection);
-            _newDirection = null;
-        }
+            var snake = _snakes[i];
+            var x = snake.GetX();
+            var y = snake.GetY();
+            var foodIndex = ContainsPoint(_food, new Point(x, y));
+            var newDirection = _newDirections[i];
 
-        // Eat if on some food
-        //
-        if (foodIndex > -1)
-        {
-            // Another reason we should use a set / dictionary
+            if (newDirection != null && DIRECTIONS.includes(newDirection))
+            {
+                snake.ChangeDirection(newDirection);
+                _newDirections[i] = null;
+            }
+
+            // Eat if on some food
             //
-            _food.splice(foodIndex, 1);
-            _snake.Eat();
+            if (foodIndex > -1)
+            {
+                // Another reason we should use a set / dictionary
+                //
+                _food.splice(foodIndex, 1);
+                snake.Eat();
+            }
+
+            // Move or end
+            //
+            if (x >= _scene.GetWidth() || x <= 0 || y >= _scene.GetHeight() || y <= 0 || snake.IsDead())
+            {
+                _self.ResetGame();
+                return;
+            }
+            else
+                snake.Move();
+
+            // Generate more food
+            //
+            var toGenerate = Math.floor(snake.GetLength() / 5) + 1 - _food.length;
         }
-
-        // Move or end
-        //
-        if (x >= _scene.GetWidth() || x <= 0 || y >= _scene.GetHeight() || y <= 0 || _snake.IsDead())
-            _self.ResetGame();
-        else
-            _snake.Move();
-
-
-        // Generate more food
-        //
-        var toGenerate = Math.floor(_snake.GetLength() / 5) + 1 - _food.length;
 
         if (toGenerate > 0)
         {
@@ -104,22 +120,17 @@
         }
     };
 
-    // TODO: change from polling once input managers exist
-    //
-    this.ChangeDirection = function (newDirection)
+    this.ChangeDirection = function (player, newDirection)
     {
         if (newDirection === null)
             return;
 
-        if (newDirection === "EAT!!")
-            _snake.Eat();
-        else
-            _newDirection = newDirection;
+        _newDirections[player] = newDirection;
     };
 
     this.ResetGame = function ()
     {
-        _snake = new Snake(_scene.GetCenterX(), _scene.GetCenterY());
+        _snakes = [];
         _food = [];
         _snakeHandler.Disable();
 
@@ -128,8 +139,23 @@
 
     // Run every time the screen is changed to
     //
-    this.Startup = function ()
+    this.Startup = function (Args)
     {
+        switch (Args.gameMode)
+        {
+            case "Single":
+                _snakes.push(new Snake(_scene.GetCenterX(), _scene.GetCenterY()));
+                break;
+            case "LocalMulti":
+                _twoPlayerMode = true;
+                var p1StartX = RoundToNearest(_scene.GetCenterX() * (1 / 3), SEGMENT_WIDTH);
+                var p2StartX = RoundToNearest(_scene.GetCenterX() * (2 / 3), SEGMENT_WIDTH);
+                var startY = _scene.GetCenterY();
+                _snakes.push(new Snake(p1StartX, startY));
+                _snakes.push(new Snake(p2StartX, startY));
+                break;
+        }
+
         // We make a new snake so we have to update the object it acts on
         //
         _self.SetupSnakeInput();
@@ -140,10 +166,14 @@
     {
         var events =
             {
-                "w": function () { _self.ChangeDirection("up") },
-                "a": function () { _self.ChangeDirection("left") },
-                "s": function () { _self.ChangeDirection("down") },
-                "d": function () { _self.ChangeDirection("right") }
+                "w": function () { _self.ChangeDirection(0, "up") },
+                "a": function () { _self.ChangeDirection(0, "left") },
+                "s": function () { _self.ChangeDirection(0, "down") },
+                "d": function () { _self.ChangeDirection(0, "right") },
+                "ArrowUp": function () { _self.ChangeDirection(1, "up") },
+                "ArrowLeft": function () { _self.ChangeDirection(1, "left") },
+                "ArrowDown": function () { _self.ChangeDirection(1, "down") },
+                "ArrowRight": function () { _self.ChangeDirection(1, "right") }
             };
 
         if (_snakeHandler === null)

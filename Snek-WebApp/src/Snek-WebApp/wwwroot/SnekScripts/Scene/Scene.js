@@ -23,7 +23,7 @@
         _currentScreen.Draw();
     };
 
-    this.ChangeScreen = function (ScreenName)
+    this.ChangeScreen = function (ScreenName, Args)
     {
         if (!_screens.hasOwnProperty(ScreenName))
         {
@@ -32,7 +32,7 @@
         }
 
         _currentScreen = _screens[ScreenName];
-        _currentScreen.Startup();
+        _currentScreen.Startup(Args);
     };
 
     this.GetWidth = function ()

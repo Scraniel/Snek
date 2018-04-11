@@ -33,14 +33,14 @@
         }
     };
 
-    this.EnterGame = function ()
+    this.EnterGame = function (GameMode)
     {
         _drawText = false;
-        _scene.ChangeScreen("GameScreen");
+        _scene.ChangeScreen("GameScreen", { gameMode:  GameMode});
         _inputHandler.Disable();
     }
 
-    this.Startup = function ()
+    this.Startup = function (Args)
     {
         _inputHandler.Enable();
     }
@@ -49,7 +49,8 @@
     //
     var events =
         {
-            "Enter": this.EnterGame
+            "Enter": function () { _self.EnterGame("Single") },
+            "q" : function () { _self.EnterGame("LocalMulti") }
         };
 
     _inputHandler = new KeyboardInputHandler(events, _self);
