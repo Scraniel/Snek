@@ -5,14 +5,8 @@
 
     this.Listener = function (event) 
     {
-        if (!_enabled)
+        if (!_enabled || !_map.hasOwnProperty(event.key))
             return;
-
-        if (!_map.hasOwnProperty(event.key))
-        {
-            console.error("Key '" + event.key + "' not registered.");
-            return;
-        }
 
         _map[event.key]();
     };
@@ -34,14 +28,7 @@
     //
     this.UpsertKey = function (key, newAction)
     {
-        if (_map.hasOwnProperty(key))
-        {
-            _map[key] = newAction;
-        }
-        else
-        {
-            _map[key] = newAction;
-        }
+        _map[key] = newAction;
     };
 
     this.Disable = function ()
@@ -59,6 +46,7 @@
         return _enabled;
     };
 
-
+    // One time initialization
+    //
     document.addEventListener("keydown", this.Listener);
 }

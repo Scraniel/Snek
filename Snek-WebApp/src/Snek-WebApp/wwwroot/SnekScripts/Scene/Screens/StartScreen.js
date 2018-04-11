@@ -45,7 +45,7 @@
         _inputHandler.Enable();
     }
 
-    // 1 time Initialization
+    // One time initialization
     //
     var events =
         {

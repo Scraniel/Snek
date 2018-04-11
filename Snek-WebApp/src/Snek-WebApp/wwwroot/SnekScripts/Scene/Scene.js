@@ -7,10 +7,6 @@
     var _centerX = RoundToNearest(_width / 2, SEGMENT_WIDTH);
     var _centerY = RoundToNearest(_height / 2, SEGMENT_WIDTH);
 
-    // TODO: Extract to input managers
-    //
-    var _currentAction = null;
-
     // Just so we can cache these
     // TODO: this can easily be stored in a config
     //
@@ -37,17 +33,6 @@
 
         _currentScreen = _screens[ScreenName];
         _currentScreen.Startup();
-        _currentAction = null;
-    };
-
-    this.UpdateAction = function (action)
-    {
-        _currentAction = action;
-    };
-
-    this.GetCurrentAction = function ()
-    {
-        return _currentAction;
     };
 
     this.GetWidth = function ()
@@ -70,7 +55,7 @@
         return _centerY;
     };
 
-    // 1 time Initialization
+    // One time initialization
     //
     _screens = 
     {
