@@ -143,10 +143,10 @@
     {
         switch (Args.gameMode)
         {
-            case "Single":
+            case "SINGLE PLAYER":
                 _snakes.push(new Snake(_scene.GetCenterX(), _scene.GetCenterY()));
                 break;
-            case "LocalMulti":
+            case "MULTI-PLAYER":
                 _twoPlayerMode = true;
                 var p1StartX = RoundToNearest(_scene.GetCenterX() * (1 / 3), SEGMENT_WIDTH);
                 var p2StartX = RoundToNearest(_scene.GetCenterX() * (2 / 3), SEGMENT_WIDTH);
